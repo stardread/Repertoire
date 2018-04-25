@@ -1,24 +1,21 @@
-//package com.supinfo.sun.repertory.midlets;
 
 /**
  *
-
- 
  @author Bontemps Goblet
- 
 **/
 
 public class Contact {
 
-    private String name, mail, phoneNumber;
+    private String nom, mail, numTel, adresse;
 
     public Contact() {
     }
 
-    public Contact(String name, String mail, String phoneNumber) {
-        this.name = name;
+    public Contact(String nom, String mail, String numTel, String adresse) {
+        this.nom = nom;
         this.mail = mail;
-        this.phoneNumber = phoneNumber;
+        this.numTel = numTel;
+		this.adresse = adresse;
     }
 
     public String getMail() {
@@ -29,20 +26,28 @@ public class Contact {
         this.mail = mail;
     }
 
-    public String getName() {
-        return name;
+    public String getnom() {
+        return nom;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setnom(String nom) {
+        this.nom = nom;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getnumTel() {
+        return numTel;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setnumTel(String numTel) {
+        this.numTel = numTel;
+    }
+	
+    public String getAdresse() {
+        return adresse;
+    }
+
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
     }
 
     public void parseByteArray(byte[] record, char separator) {
@@ -50,15 +55,16 @@ public class Contact {
             String values = new String(record);
             int index = values.indexOf(separator);
             int lastIndex = values.lastIndexOf(separator);
-            this.name = values.substring(0, index);
-            this.phoneNumber = values.substring(index+1, lastIndex);
+            this.nom = values.substring(0, index);
+            this.numTel = values.substring(index+1, lastIndex);
             this.mail = values.substring(lastIndex+1);
+			//this.adresse = values.substring(lastIndex+1);
         }
     }
 
     public byte[] toByteArray(char separator) {
-        return (this.name + separator + this.phoneNumber + separator +
-        this.mail).getBytes();
+        return (this.nom + separator + this.numTel + separator +
+        this.mail + separator + this.adresse).getBytes();
     }
 
 }

@@ -26,16 +26,16 @@ public class RepertoryMidlet extends MIDlet implements CommandListener {
     private Command addCommand;
     private Command modifyCommand, deleteCommand;
     private Display display;
-    private TextField name, mail, phoneNumber;
+    private TextField nom, mail, numTel, adresse;
     private RecordStore store;
 
     public RepertoryMidlet() {
 
-        contactList = new List("Contact", List.IMPLICIT);
+        contactList = new List("Contacts", List.IMPLICIT);
 
-        addCommand = new Command("add", Command.ITEM, 1);
-        modifyCommand = new Command("modify", Command.ITEM, 2);
-        deleteCommand = new Command("delete", Command.CANCEL, 0);
+        addCommand = new Command("Ajouter", Command.ITEM, 1);
+        modifyCommand = new Command("Modifier", Command.ITEM, 2);
+        deleteCommand = new Command("Supprimer", Command.CANCEL, 0);
 
         contactList.addCommand(addCommand);
         contactList.addCommand(modifyCommand);
@@ -56,7 +56,7 @@ public class RepertoryMidlet extends MIDlet implements CommandListener {
                 Contact contact = new Contact();
                 try {
                     contact.parseByteArray(store.getRecord(i), '&');
-                    contactList.append(contact.getName(), null);
+                    contactList.append(contact.getnom(), null);
                 } catch (RecordStoreException ex) {
                     ex.printStackTrace();
                 }
@@ -84,12 +84,14 @@ public class RepertoryMidlet extends MIDlet implements CommandListener {
         if (d == contactList) {
             if (c == addCommand) {
             contactForm = new Form("Contact");
-            name = new TextField("Name", null, 50, TextField.ANY);
-            phoneNumber = new TextField("phone number", null, 10, TextField.PHONENUMBER);
+            nom = new TextField("Nom", null, 50, TextField.ANY);
+            numTel = new TextField("Num Tel", null, 10, TextField.PHONENUMBER);
             mail = new TextField("mail", null, 255, TextField.EMAILADDR);
-            contactForm.append(name);
-            contactForm.append(phoneNumber);
+			adresse = new TextField("adresse", null, 255, TextField.ANY);
+            contactForm.append(nom);
+            contactForm.append(numTel);
             contactForm.append(mail);
+			contactForm.append(adresse);
 
             contactForm.addCommand(addCommand);
             contactForm.setCommandListener(this);
@@ -101,12 +103,14 @@ public class RepertoryMidlet extends MIDlet implements CommandListener {
                 Contact contact = new Contact();
                 try {
                     contact.parseByteArray(store.getRecord(contactList.getSelectedIndex() + 1), '&');
-                    name = new TextField("Name", contact.getName(), 50, TextField.ANY);
-                    phoneNumber = new TextField("phone number", contact.getPhoneNumber(), 10, TextField.PHONENUMBER);
+                    nom = new TextField("nom", contact.getnom(), 50, TextField.ANY);
+                    numTel = new TextField("phone number", contact.getnumTel(), 10, TextField.PHONENUMBER);
                     mail = new TextField("mail", contact.getMail(), 255, TextField.EMAILADDR);
-                    contactForm.append(name);
-                    contactForm.append(phoneNumber);
+					adresse = new TextField("adresse", null, 255, TextField.ANY);
+                    contactForm.append(nom);
+                    contactForm.append(numTel);
                     contactForm.append(mail);
+					contactForm.append(adresse);
 
                     contactForm.addCommand(modifyCommand);
                     contactForm.setCommandListener(this);
@@ -141,10 +145,10 @@ public class RepertoryMidlet extends MIDlet implements CommandListener {
     }
 
     private void saveContact() {
-        Contact contact = new Contact(name.getString(), mail.getString(), phoneNumber.getString());
+        Contact contact = new Contact(nom.getString(), mail.getString(), numTel.getString(), adresse.getString());
         try {
             store.addRecord(contact.toByteArray('&'), 0, contact.toByteArray('&').length);
-            contactList.append(contact.getName(), null);
+            contactList.append(contact.getnom(), null);
         } catch (RecordStoreException ex) {
             ex.printStackTrace();
         }
@@ -152,10 +156,10 @@ public class RepertoryMidlet extends MIDlet implements CommandListener {
     }
 
     private void modifyContact() {
-        Contact contact = new Contact(name.getString(), mail.getString(), phoneNumber.getString());
+        Contact contact = new Contact(nom.getString(), mail.getString(), numTel.getString(), adresse.getString());
         try {
             store.setRecord(contactList.getSelectedIndex() + 1, contact.toByteArray('&'), 0, contact.toByteArray('&').length);
-            contactList.set(contactList.getSelectedIndex(), contact.getName(), null);
+            contactList.set(contactList.getSelectedIndex(), contact.getnom(), null);
         } catch (RecordStoreException ex) {
             ex.printStackTrace();
         }
